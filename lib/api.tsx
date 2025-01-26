@@ -3,7 +3,7 @@
 import { Business } from "./types";
 
 export const fetchBusinesses = async (): Promise<Business[]> => {
-    const response = await fetch("http://localhost:5000/api/business/");
+    const response = await fetch("https://goa-plan-backend.onrender.com/api/business/");
     if (!response.ok) {
       throw new Error("Failed to fetch businesses");
     }
@@ -11,7 +11,7 @@ export const fetchBusinesses = async (): Promise<Business[]> => {
   };
   
   export const fetchBusinessById = async (id: string): Promise<Business> => {
-    const response = await fetch(`http://localhost:5000/api/business/${id}`);
+    const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${id}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch business with id: ${id}`);
     }

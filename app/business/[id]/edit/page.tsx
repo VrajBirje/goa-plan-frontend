@@ -6,10 +6,10 @@ import { ClipLoader } from "react-spinners";
 import Navbar from "@/components/common/navbar";
 
 // Define the CloudinaryUploadWidgetInfo type
-interface CloudinaryUploadWidgetInfo {
-  secure_url: string;
-  [key: string]: any;
-}
+// interface CloudinaryUploadWidgetInfo {
+//   secure_url: string;
+//   [key: string]: any;
+// }
 
 const EditBusinessPage = () => {
   const pathname = usePathname();
@@ -45,7 +45,7 @@ const EditBusinessPage = () => {
     const fetchBusinessData = async () => {
       if (!businessId) return;
       try {
-        const response = await fetch(`http://localhost:5000/api/business/${businessId}`);
+        const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch business details for edit");
         }
@@ -70,7 +70,7 @@ const EditBusinessPage = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true); // Show spinner while submitting
-      const response = await fetch(`http://localhost:5000/api/business/${businessId}`, {
+      const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`, {
         method: "PUT", // PUT request for updating
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -92,6 +92,13 @@ const EditBusinessPage = () => {
   };
 
   if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ClipLoader color="#4A90E2" loading={loading} size={50} />
+      </div>
+    );
+  }
+  if (isSubmitting) {
     return (
       <div className="flex justify-center items-center h-screen">
         <ClipLoader color="#4A90E2" loading={loading} size={50} />

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"; // For navigation
 import { Business } from "@/lib/types"; // Adjust the import based on your file structure
 import { ClipLoader } from "react-spinners";
 import Navbar from "@/components/common/navbar";
+import Image from "next/image";
 
 const BusinessDetailsPage = () => {
     const [business, setBusiness] = useState<Business | null>(null);
@@ -23,7 +24,7 @@ const BusinessDetailsPage = () => {
         const fetchBusiness = async () => {
             try {
                 console.log(businessId)
-                const response = await fetch(`http://localhost:5000/api/business/${businessId}`);
+                const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch business details");
                 }
@@ -44,41 +45,47 @@ const BusinessDetailsPage = () => {
     if (!business) {
         return (
             <div className="flex justify-center items-center h-screen">
-              <ClipLoader color="#4A90E2" loading={true} size={50} />
+                <ClipLoader color="#4A90E2" loading={true} size={50} />
             </div>
-          );
+        );
     }
 
     return (
-        <div className="p-6 max-w-6xl mx-auto">
+        <div className="w-full">
             <Navbar/>
-            <h1 className="text-3xl font-bold mb-6">{business.business_name}</h1>
-            <div className="flex flex-col sm:flex-row">
-                <img
-                    src={business.image_url || "/default.jpg"}
-                    alt={business.business_name || "Business Image"}
-                    className="w-full sm:w-1/3 h-64 object-cover mb-4 sm:mb-0 sm:mr-4"
-                />
-                <div className="flex flex-col sm:w-2/3">
-                    <p className="text-lg font-bold">{business.business_type}</p>
-                    <p>{business.owner}</p>
-                    <p>{business.address}</p>
-                    <p>{business.city}, {business.state} - {business.pincode}</p>
-                    <p className="mt-2">{business.services}</p>
-                    <a
-                        href={business.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 underline mt-4"
-                    >
-                        Visit Website
-                    </a>
-                    <button
-                        onClick={handleEditClick}
-                        className="mt-6 px-6 py-2 bg-blue-500 text-white rounded"
-                    >
-                        Edit Business
-                    </button>
+            <div className="p-6 max-w-6xl mx-auto">
+
+                <h1 className="text-3xl font-bold mb-6">{business.business_name}</h1>
+                <div className="flex flex-col sm:flex-row">
+                    <div className="w-full sm:w-1/3 h-64 object-cover mb-4 sm:mb-0 sm:mr-4 relative">
+                        <Image
+                            fill={true}
+                            src={business.image_url || "/default.jpg"}
+                            alt={business.business_name || "Business Image"}
+                            className="absolute"
+                        />
+                    </div>
+                    <div className="flex flex-col sm:w-2/3">
+                        <p className="text-lg font-bold">{business.business_type}</p>
+                        <p>{business.owner}</p>
+                        <p>{business.address}</p>
+                        <p>{business.city}, {business.state} - {business.pincode}</p>
+                        <p className="mt-2">{business.services}</p>
+                        <a
+                            href={business.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline mt-4"
+                        >
+                            Visit Website
+                        </a>
+                        <button
+                            onClick={handleEditClick}
+                            className="mt-6 px-6 py-2 bg-blue-500 text-white rounded"
+                        >
+                            Edit Business
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

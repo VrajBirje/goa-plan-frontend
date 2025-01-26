@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/common/navbar";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
@@ -30,7 +31,7 @@ interface Business {
     updatedAt: string;
 }
 
-const page = () => {
+const Page = () => {
     const [businesses, setBusinesses] = useState<Business[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -39,7 +40,7 @@ const page = () => {
         const fetchBusinesses = async () => {
             try {
                 setLoading(true);
-                const response = await fetch("http://localhost:5000/api/business/");
+                const response = await fetch("https://goa-plan-backend.onrender.com/api/business/");
                 if (!response.ok) {
                     throw new Error("Failed to fetch businesses");
                 }
@@ -58,7 +59,7 @@ const page = () => {
 
     return (
         <div className="p-6 max-w-6xl mx-auto flex flex-col items-center justify-start">
-            <Navbar/>
+            <Navbar />
             <h1 className="text-3xl font-bold mb-6 mt-[10vh]">Businesses</h1>
             {loading ? (
                 // Show spinner while loading
@@ -76,13 +77,15 @@ const page = () => {
                     {businesses.map((business) => (
                         <Link key={business.id} href={`/business/${business.id}`} passHref>
                             <div
-                                className="business_card rounded-lg shadow bg-white overflow-hidden flex flex-col"
-                            >
-                                <img
-                                    src={business.image_url || "/default.jpg"}
-                                    alt={business.business_name || "Business Image"}
-                                    className="w-full h-48 object-cover"
-                                />
+                                className="business_card rounded-lg shadow bg-white overflow-hidden flex flex-col">
+                                <div className="w-full h-48 object-cover relative">
+                                    <Image
+                                        fill={true}
+                                        src={business.image_url || "/default.jpg"}
+                                        alt={business.business_name || "Business Image"}
+                                        className="absolute"
+                                    />
+                                </div>
                                 <div className="p-4 flex flex-col justify-between flex-grow">
                                     <h2 className="text-xl font-bold mb-2">{business.business_name}</h2>
                                     <p className="text-gray-600 mb-1">{business.business_type}</p>
@@ -106,4 +109,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;
