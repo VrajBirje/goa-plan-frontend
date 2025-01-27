@@ -113,7 +113,7 @@ const EditBusinessPage = () => {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2 font-medium">Business Type</label>
+              <label className="block mb-2 font-medium">Business Category</label>
               <input
                 type="text"
                 name="business_type"

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { CloudinaryUploadWidgetResults } from 'next-cloudinary';
+import Navbar from "@/components/common/navbar";
 
 // Define the CloudinaryUploadWidgetInfo type
 // interface CloudinaryUploadWidgetInfo {
@@ -34,7 +35,7 @@ const Page = () => {
     created_by: 1,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -127,141 +128,157 @@ const Page = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white shadow rounded">
-      <h1 className="text-2xl font-bold mb-4">Add Business</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-2 font-medium">Business Type</label>
-            <input
-              type="text"
-              name="business_type"
-              value={formData.business_type}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
+    <div className="w-full">
+      <Navbar />
+      <div className="p-6 max-w-3xl mx-auto bg-white shadow rounded">
+        <h1 className="text-2xl font-bold mb-4">Add Business</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-medium">Business Category</label>
+              <select
+                name="business_type"
+                value={formData.business_type}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="" disabled>Select a business type</option>
+                <option value="villa-stay">Villa Stay</option>
+                <option value="home-stay">Home Stay</option>
+                <option value="service-apartments">Service Apartments</option>
+                <option value="luxury-stay">Luxury Stay</option>
+                <option value="hotel-restaurant">Hotel/Restaurant</option>
+                <option value="restro-pub">Restro Pub</option>
+                <option value="cafes">Cafes</option>
+                <option value="adventure-activities">Adventure Activities</option>
+                <option value="trekking">Trekking</option>
+                <option value="bike-car-rentals">Bike / Car Rentals</option>
+                <option value="workshops">Workshops</option>
+                <option value="taxi">Taxi</option>
+                <option value="shopping">Shopping</option>
+              </select>
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Business Name</label>
+              <input
+                type="text"
+                name="business_name"
+                value={formData.business_name}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Owner</label>
+              <input
+                type="text"
+                name="owner"
+                value={formData.owner}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Phone Number</label>
+              <input
+                type="number"
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Website</label>
+              <input
+                type="url"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">State</label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Country</label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Pincode</label>
+              <input
+                type="text"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">Services</label>
+              <textarea
+                name="services"
+                value={formData.services}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              ></textarea>
+            </div>
           </div>
-          <div>
-            <label className="block mb-2 font-medium">Business Name</label>
-            <input
-              type="text"
-              name="business_name"
-              value={formData.business_name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Owner</label>
-            <input
-              type="text"
-              name="owner"
-              value={formData.owner}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Phone Number</label>
-            <input
-              type="number"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Website</label>
-            <input
-              type="url"
-              name="website"
-              value={formData.website}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">City</label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">State</label>
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Country</label>
-            <input
-              type="text"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Pincode</label>
-            <input
-              type="text"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium">Services</label>
-            <textarea
-              name="services"
-              value={formData.services}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            ></textarea>
-          </div>
-        </div>
-        {/* <div className="mt-4">
+          {/* <div className="mt-4">
           <label className="block mb-2 font-medium">Upload Image</label>
           <CldUploadWidget
             options={{ sources: ["camera"], multiple: false }}
@@ -290,44 +307,45 @@ const Page = () => {
           </CldUploadWidget>
 
         </div> */}
-        <div className="mt-4">
-          <label className="block mb-2 font-medium">Upload Images</label>
-          <CldUploadWidget
-            options={{ sources: ["camera"], multiple: true }}
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
-            onSuccess={handleUploadSuccess}
-          >
-            {({ open }) => (
-              <button
-                type="button"
-                onClick={() => open()}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                Upload Images
-              </button>
-            )}
-          </CldUploadWidget>
+          <div className="mt-4">
+            <label className="block mb-2 font-medium">Upload Images</label>
+            <CldUploadWidget
+              options={{ sources: ["camera"], multiple: true }}
+              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
+              onSuccess={handleUploadSuccess}
+            >
+              {({ open }) => (
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Upload Images
+                </button>
+              )}
+            </CldUploadWidget>
 
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            {uploadedImages.map((url, index) => (
-              <div key={index} className="relative w-full h-auto rounded border">
-                <Image
-                  fill={true}
-                  src={url}
-                  alt={`Uploaded ${index + 1}`}
-                  className="absolute"
-                />
-              </div>
-            ))}
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              {uploadedImages.map((url, index) => (
+                <div key={index} style={{ aspectRatio: "2/2" }} className="relative w-full h-auto rounded border">
+                  <Image
+                    fill={true}
+                    src={url}
+                    alt={`Uploaded ${index + 1}`}
+                    className="absolute"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <button
-          type="submit"
-          className="mt-6 px-6 py-2 bg-green-500 text-white rounded"
-        >
-          Add Business
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="mt-6 px-6 py-2 bg-green-500 text-white rounded"
+          >
+            Add Business
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

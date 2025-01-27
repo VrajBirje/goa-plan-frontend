@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-// import { UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
     return (
@@ -10,7 +10,7 @@ const Navbar = () => {
                 <Link href="/add">
                     <div style={{cursor:"pointer", borderRadius:"5px", border:"1px solid black"}} className='px-[8px] py-[4px] text-black font-regular text-xs'>Add Business</div>
                 </Link>
-                {/* <UserButton /> */}
+                <UserButton />
             </div>
         </div>
     )

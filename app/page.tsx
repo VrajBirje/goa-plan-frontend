@@ -1,112 +1,26 @@
-"use client";
-import Navbar from "@/components/common/navbar";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { ClipLoader } from "react-spinners";
-
-// Define the TypeScript interface for a business object
-interface Business {
-    id: number;
-    business_type: string;
-    business_name: string;
-    owner: string;
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    pincode: string;
-    phone_number: string;
-    email: string;
-    website: string;
-    opening_hours: string;
-    ratings: number;
-    reviews_count: number;
-    services: string;
-    latitude: number;
-    longitude: number;
-    image_url: string;
-    created_by: number;
-    createdAt: string;
-    updatedAt: string;
-}
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
 
 const Page = () => {
-    const [businesses, setBusinesses] = useState<Business[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    // Fetch businesses data from the API
-    useEffect(() => {
-        const fetchBusinesses = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch("https://goa-plan-backend.onrender.com/api/business/");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch businesses");
-                }
-                const data: Business[] = await response.json();
-                setBusinesses(data);
-            } catch (error) {
-                console.error("Error fetching businesses:", error);
-            }
-            finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBusinesses();
-    }, []);
-
     return (
-        <div className="p-6 max-w-6xl mx-auto flex flex-col items-center justify-start">
-            <Navbar />
-            <h1 className="text-3xl font-bold mb-6 mt-[10vh]">Businesses</h1>
-            {loading ? (
-                // Show spinner while loading
-                <div className="flex justify-center items-center h-96">
-                    <ClipLoader
-                        color="#4A90E2" // Customize spinner color
-                        loading={loading}
-                        size={50}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                    />
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {businesses.map((business) => (
-                        <Link key={business.id} href={`/business/${business.id}`} passHref>
-                            <div
-                                className="business_card rounded-lg shadow bg-white overflow-hidden flex flex-col">
-                                <div className="w-full h-48 object-cover relative">
-                                    <Image
-                                        fill={true}
-                                        src={business.image_url || "/default.jpg"}
-                                        alt={business.business_name || "Business Image"}
-                                        className="absolute"
-                                    />
-                                </div>
-                                <div className="p-4 flex flex-col justify-between flex-grow">
-                                    <h2 className="text-xl font-bold mb-2">{business.business_name}</h2>
-                                    <p className="text-gray-600 mb-1">{business.business_type}</p>
-                                    <p className="text-gray-600 mb-1">Owner: {business.owner}</p>
-                                    <p className="text-gray-600 mb-1">{business.address}</p>
-                                    {/* <Link
-                                    href={business.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 underline mt-auto"
-                                >
-                                    Visit Website
-                                </Link> */}
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
+        <div className='w-full '>
+            <div style={{ borderBottom: "1px solid black", position: "fixed", top: "0" }} className='w-[100vw] h-[9vh] px-[10px] mb-[10px] bg-white z-[999] flex items-center justify-between'>
+            <div style={{color:"green"}} className='font-bold text-lg p-[5px]'>Goa Plan</div>
+            <div className='flex gap-[20px] items-center'>
+                <Link href="/business">
+                    <div style={{cursor:"pointer", borderRadius:"5px", border:"1px solid black"}} className='px-[8px] py-[4px] text-black font-regular text-xs'>Dashboard</div>
+                </Link>
+            </div>
         </div>
-    );
-};
+            <div className='mt-[10vh] h-[90vh] w-[100vw] flex flex-col items-center justify-center gap-[30px]'>
+                <h1 style={{textAlign:"center", fontSize:"26px", fontWeight:"bold", color:"green"}}>Explore and Manage Goa's Businesses Seamlessly</h1>
+                <div className='relative w-[400px] h-[300px] goa-img'>
+                    <Image alt='goa' src="/image.png" fill={true} className='absolute '/>
+                </div>
+            </div>
+        </div>
+    )
+}
 
-export default Page;
+export default Page
