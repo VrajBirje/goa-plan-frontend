@@ -14,7 +14,7 @@ const Page = () => {
             </div>
         </div>
             <div className='mt-[10vh] h-[90vh] w-[100vw] flex flex-col items-center justify-center gap-[30px]'>
-                <h1 style={{textAlign:"center", fontSize:"26px", fontWeight:"bold", color:"green"}}>Explore and Manage Goa's Businesses Seamlessly</h1>
+                <h1 style={{textAlign:"center", fontSize:"26px", fontWeight:"bold", color:"green"}}>Explore and Manage Goa Businesses Seamlessly</h1>
                 <div className='relative w-[400px] h-[300px] goa-img'>
                     <Image alt='goa' src="/image.png" fill={true} className='absolute '/>
                 </div>

@@ -5,6 +5,11 @@ import { CldUploadWidget } from "next-cloudinary";
 import { ClipLoader } from "react-spinners";
 import Navbar from "@/components/common/navbar";
 
+
+interface UploadResult {
+  secure_url: string; // The uploaded file URL
+}
+
 const EditBusinessPage = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -252,7 +257,7 @@ const EditBusinessPage = () => {
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
               onSuccess={(results) => {
                 if (Array.isArray(results.event) && results.event.length > 0) {
-                  const uploadedFiles = results.event.map((file: any) => file.secure_url);
+                  const uploadedFiles = results.event.map((file: UploadResult) => file.secure_url);
                   setFormData((prevData) => ({
                     ...prevData,
                     image: [...prevData.image, ...uploadedFiles], // Append new image URLs to the image array

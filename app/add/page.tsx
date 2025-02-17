@@ -1,17 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import Navbar from "@/components/common/navbar";
 import { useUser } from "@clerk/nextjs";
 
-// Define the CloudinaryUploadWidgetInfo type
-interface CloudinaryUploadWidgetInfo {
-  secure_url: string;
-  [key: string]: any; // To account for any additional properties
-}
 
 const Page = () => {
   const { user } = useUser(); // Get the current user from Clerk
