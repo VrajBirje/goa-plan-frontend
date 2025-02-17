@@ -143,7 +143,7 @@ const Page = () => {
                 className="w-full p-2 border rounded"
                 required
               >
-                <option value="" disabled>Select a business type</option>
+                <option value="1" disabled>Select a business type</option>
                 <option value="villa-stay">Villa Stay</option>
                 <option value="home-stay">Home Stay</option>
                 <option value="service-apartments">Service Apartments</option>
