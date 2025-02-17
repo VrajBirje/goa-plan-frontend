@@ -5,38 +5,28 @@ import { CldUploadWidget } from "next-cloudinary";
 import { ClipLoader } from "react-spinners";
 import Navbar from "@/components/common/navbar";
 
-// Define the CloudinaryUploadWidgetInfo type
-// interface CloudinaryUploadWidgetInfo {
-//   secure_url: string;
-//   [key: string]: any;
-// }
-
 const EditBusinessPage = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const businessId = pathname?.split('/')[2]; // Extract business ID from URL
+  const businessId = pathname?.split("/")[2]; // Extract business ID from URL
 
   const [formData, setFormData] = useState({
-    business_type: "",
+    type: "",
     business_name: "",
     owner: "",
+    phone: "",
+    email: "",
+    website: "",
     address: "",
     city: "",
     state: "",
     country: "",
     pincode: "",
-    phone_number: "",
-    email: "",
-    website: "",
-    opening_hours: "",
-    ratings: 0,
-    reviews_count: 0,
     services: "",
-    latitude: 1,
-    longitude: 1,
-    image_url: "",
-    created_by: 1,
+    image: [] as string[], // Array for image URLs
+    created_by: null as string | null,
+    updated_by: null as string | null,
   });
   const [loading, setLoading] = useState(true); // State for spinner while fetching data
   const [isSubmitting, setIsSubmitting] = useState(false); // State for spinner while submitting
@@ -45,7 +35,7 @@ const EditBusinessPage = () => {
     const fetchBusinessData = async () => {
       if (!businessId) return;
       try {
-        const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`);
+        const response = await fetch(`http://localhost:5000/api/business/${businessId}`); // Adjusted to call your custom API
         if (!response.ok) {
           throw new Error("Failed to fetch business details for edit");
         }
@@ -61,7 +51,9 @@ const EditBusinessPage = () => {
     fetchBusinessData();
   }, [businessId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -70,7 +62,7 @@ const EditBusinessPage = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true); // Show spinner while submitting
-      const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`, {
+      const response = await fetch(`http://localhost:5000/api/business/${businessId}`, {
         method: "PUT", // PUT request for updating
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -91,20 +83,14 @@ const EditBusinessPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || isSubmitting) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#4A90E2" loading={loading} size={50} />
+        <ClipLoader color="#4A90E2" loading={loading || isSubmitting} size={50} />
       </div>
     );
   }
-  if (isSubmitting) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#4A90E2" loading={loading} size={50} />
-      </div>
-    );
-  }
+
   return (
     <div>
       <Navbar />
@@ -112,17 +98,6 @@ const EditBusinessPage = () => {
         <h1 className="text-2xl font-bold mb-4">Edit Business</h1>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-2 font-medium">Business Category</label>
-              <input
-                type="text"
-                name="business_type"
-                value={formData.business_type}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                required
-              />
-            </div>
             <div>
               <label className="block mb-2 font-medium">Business Name</label>
               <input
@@ -134,6 +109,32 @@ const EditBusinessPage = () => {
                 required
               />
             </div>
+            <div>
+              <label className="block mb-2 font-medium">Business Category</label>
+              <select
+                name="type"
+                value={formData.type} // Set the value of select based on the formData
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="" disabled>Select a business type</option>
+                <option value="villa-stay">Villa Stay</option>
+                <option value="home-stay">Home Stay</option>
+                <option value="service-apartments">Service Apartments</option>
+                <option value="luxury-stay">Luxury Stay</option>
+                <option value="hotel-restaurant">Hotel/Restaurant</option>
+                <option value="restro-pub">Restro Pub</option>
+                <option value="cafes">Cafes</option>
+                <option value="adventure-activities">Adventure Activities</option>
+                <option value="trekking">Trekking</option>
+                <option value="bike-car-rentals">Bike / Car Rentals</option>
+                <option value="workshops">Workshops</option>
+                <option value="taxi">Taxi</option>
+                <option value="shopping">Shopping</option>
+              </select>
+            </div>
+
             <div>
               <label className="block mb-2 font-medium">Owner</label>
               <input
@@ -149,8 +150,8 @@ const EditBusinessPage = () => {
               <label className="block mb-2 font-medium">Phone Number</label>
               <input
                 type="number"
-                name="phone_number"
-                value={formData.phone_number}
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
@@ -246,15 +247,15 @@ const EditBusinessPage = () => {
           {/* Image Upload */}
           <div className="mt-4">
             <label className="block mb-2 font-medium">Upload Images</label>
-            {/* <CldUploadWidget
+            <CldUploadWidget
               options={{ sources: ["camera"], multiple: true }}
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
-              onSuccess={(result: CloudinaryUploadWidgetInfo) => {
-                const info = result.info;
-                if (info?.secure_url) {
+              onSuccess={(results) => {
+                if (Array.isArray(results.event) && results.event.length > 0) {
+                  const uploadedFiles = results.event.map((file: any) => file.secure_url);
                   setFormData((prevData) => ({
                     ...prevData,
-                    image_url: info.secure_url, // Save uploaded image URL to form data
+                    image: [...prevData.image, ...uploadedFiles], // Append new image URLs to the image array
                   }));
                 }
               }}
@@ -268,33 +269,7 @@ const EditBusinessPage = () => {
                   Upload Images
                 </button>
               )}
-            </CldUploadWidget> */}
-            <CldUploadWidget
-              options={{ sources: ["camera"], multiple: true }}
-              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
-              onSuccess={(results) => {
-                if (Array.isArray(results.event) && results.event.length > 0) {
-                  const uploadedFile = results.event[0];
-                  if (uploadedFile.secure_url) {
-                    setFormData((prevData) => ({
-                      ...prevData,
-                      image_url: uploadedFile.secure_url, // Save the secure URL
-                    }));
-                  }
-                }
-              }}
-            >
-              {({ open }) => (
-                <button
-                  type="button"
-                  onClick={() => open()}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Upload Images
-                </button>
-              )}
             </CldUploadWidget>
-
           </div>
 
           <button

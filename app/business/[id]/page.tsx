@@ -1,4 +1,3 @@
-// app/business/[id]/page.tsx
 "use client"; // Ensure this file is treated as a client component
 
 import React, { useEffect, useState } from "react";
@@ -23,8 +22,9 @@ const BusinessDetailsPage = () => {
 
         const fetchBusiness = async () => {
             try {
-                console.log(businessId)
-                const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`);
+                console.log(businessId);
+                // Use the local API endpoint for fetching business by ID
+                const response = await fetch(`http://localhost:5000/api/business/${businessId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch business details");
                 }
@@ -52,21 +52,20 @@ const BusinessDetailsPage = () => {
 
     return (
         <div className="w-full">
-            <Navbar/>
+            <Navbar />
             <div className="p-6 max-w-6xl mx-auto">
-
                 <h1 className="text-3xl font-bold mb-6">{business.business_name}</h1>
                 <div className="flex flex-col sm:flex-row">
                     <div className="w-full sm:w-1/3 h-64 object-cover mb-4 sm:mb-0 sm:mr-4 relative">
                         <Image
                             fill={true}
-                            src={business.image_url || "/default.jpg"}
+                            src={business.image[0] || "/default.jpg"}
                             alt={business.business_name || "Business Image"}
                             className="absolute"
                         />
                     </div>
                     <div className="flex flex-col sm:w-2/3">
-                        <p className="text-lg font-bold">{business.business_type}</p>
+                        <p className="text-lg font-bold">{business.type}</p>
                         <p>{business.owner}</p>
                         <p>{business.address}</p>
                         <p>{business.city}, {business.state} - {business.pincode}</p>

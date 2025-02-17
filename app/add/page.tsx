@@ -1,66 +1,44 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import Navbar from "@/components/common/navbar";
+import { useUser } from "@clerk/nextjs";
 
 // Define the CloudinaryUploadWidgetInfo type
-// interface CloudinaryUploadWidgetInfo {
-//   secure_url: string;
-//   [key: string]: any; // To account for any additional properties
-// }
+interface CloudinaryUploadWidgetInfo {
+  secure_url: string;
+  [key: string]: any; // To account for any additional properties
+}
 
 const Page = () => {
+  const { user } = useUser(); // Get the current user from Clerk
+
   const [formData, setFormData] = useState({
-    business_type: "",
+    business_type:"",
     business_name: "",
     owner: "",
-    address: "parel",
+    phone_number: "",
+    email: "",
+    website: "",
+    address: "",
     city: "",
     state: "",
     country: "",
     pincode: "",
-    phone_number: "",
-    email: "",
-    website: "",
-    opening_hours: "",
-    ratings: 0,
-    reviews_count: 0,
     services: "",
-    latitude: 1,
-    longitude: 1,
-    image_url: "",
-    created_by: 1,
+    image: [] as string[], // Handle image as an array
+    created_by: user?.id || "", // Use Clerk's user ID for created_by
   });
+
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-
-  // const handleUploadSuccess = (result: any) => {
-  //   const info = result.info;
-  //   if (info && typeof info === "object" && "secure_url" in info) {
-  //     const image_url = info.secure_url;
-  //     setUploadedImages((prevImages) => {
-  //       const updatedImages = [...prevImages, image_url];
-  //       // Set the first uploaded image to imageUrl in formData
-  //       if (updatedImages.length === 1) {
-  //         setFormData((prevData) => ({
-  //           ...prevData,
-  //           image_url: image_url,
-  //         }));
-  //       }
-  //       return updatedImages;
-  //     });
-  //   } else {
-  //     console.error("Invalid upload result:", result);
-  //   }
-  // };
 
   const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
     const info = result.info;
@@ -68,13 +46,10 @@ const Page = () => {
       const image_url = info.secure_url;
       setUploadedImages((prevImages) => {
         const updatedImages = [...prevImages, image_url];
-        // Set the first uploaded image to imageUrl in formData
-        if (updatedImages.length === 1) {
-          setFormData((prevData) => ({
-            ...prevData,
-            image_url: image_url,
-          }));
-        }
+        setFormData((prevData) => ({
+          ...prevData,
+          image: updatedImages, // Update the form data with the array of images
+        }));
         return updatedImages;
       });
     } else {
@@ -84,40 +59,54 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prepare request body with updated data format
+    const requestBody = {
+      type:formData.business_type,
+      business_name: formData.business_name,
+      owner: formData.owner,
+      phone: formData.phone_number,
+      email: formData.email,
+      website: formData.website,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      country: formData.country,
+      pincode: formData.pincode,
+      services: formData.services,
+      image: formData.image, // Send the images array
+      created_by: formData.created_by,
+    };
+
     try {
       const response = await fetch("http://localhost:5000/api/business/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
         alert("Business added successfully!");
         setFormData({
-          business_type: "",
+          business_type:"",
           business_name: "",
           owner: "",
+          phone_number: "",
+          email: "",
+          website: "",
           address: "",
           city: "",
           state: "",
           country: "",
           pincode: "",
-          phone_number: "",
-          email: "",
-          website: "",
-          opening_hours: "9",
-          ratings: 0,
-          reviews_count: 0,
           services: "",
-          latitude: 1,
-          longitude: 1,
-          image_url: "",
-          created_by: 1,
+          image: [],
+          created_by: user?.id || "", // Retain created_by as Clerk's user ID
         });
+        setUploadedImages([]); // Clear uploaded images
       } else {
         const errorData = await response.json(); // Parse error response
         console.error("Error response:", errorData);
-
         const errorMessage = errorData?.error || "Failed to add business. Try again!";
         alert(`Error: ${errorMessage}`);
       }
@@ -131,7 +120,7 @@ const Page = () => {
     <div className="w-full">
       <Navbar />
       <div className="p-6 max-w-3xl mx-auto bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4">Add Business</h1>
+        <h1 className="text-2xl font-bold mt-14">Add Business</h1>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -277,65 +266,38 @@ const Page = () => {
                 className="w-full p-2 border rounded"
               ></textarea>
             </div>
-          </div>
-          {/* <div className="mt-4">
-          <label className="block mb-2 font-medium">Upload Image</label>
-          <CldUploadWidget
-            options={{ sources: ["camera"], multiple: false }}
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
-            onSuccess={(result) => {
-              const info = result.info;
-              if (info && typeof info === "object" && "secure_url" in info) {
-                setFormData((prevData) => ({
-                  ...prevData,
-                  imageUrl: info.secure_url,
-                }));
-              } else {
-                console.error("Invalid upload result:", result);
-              }
-            }}
-          >
-            {({ open }) => (
-              <button
-                type="button"
-                onClick={() => open()}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+          
+            {/* Image Upload */}
+            <div className="mt-4">
+              <label className="block mb-2 font-medium">Upload Images</label>
+              <CldUploadWidget
+                options={{ sources: ["camera"], multiple: true }}
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
+                onSuccess={handleUploadSuccess}
               >
-                Upload Image
-              </button>
-            )}
-          </CldUploadWidget>
+                {({ open }) => (
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                  >
+                    Upload Images
+                  </button>
+                )}
+              </CldUploadWidget>
 
-        </div> */}
-          <div className="mt-4">
-            <label className="block mb-2 font-medium">Upload Images</label>
-            <CldUploadWidget
-              options={{ sources: ["camera"], multiple: true }}
-              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET}
-              onSuccess={handleUploadSuccess}
-            >
-              {({ open }) => (
-                <button
-                  type="button"
-                  onClick={() => open()}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Upload Images
-                </button>
-              )}
-            </CldUploadWidget>
-
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              {uploadedImages.map((url, index) => (
-                <div key={index} style={{ aspectRatio: "2/2" }} className="relative w-full h-auto rounded border">
-                  <Image
-                    fill={true}
-                    src={url}
-                    alt={`Uploaded ${index + 1}`}
-                    className="absolute"
-                  />
-                </div>
-              ))}
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                {uploadedImages.map((url, index) => (
+                  <div key={index} style={{ aspectRatio: "2/2" }} className="relative w-full h-auto rounded border">
+                    <Image
+                      fill={true}
+                      src={url}
+                      alt={`Uploaded ${index + 1}`}
+                      className="absolute"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <button
@@ -351,3 +313,4 @@ const Page = () => {
 };
 
 export default Page;
+

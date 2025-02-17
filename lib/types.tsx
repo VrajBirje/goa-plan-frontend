@@ -1,26 +1,21 @@
-// types.ts
+// src/lib/types.ts
+
 export interface Business {
-    id: number;
-    business_type: string;
-    business_name: string;
-    owner: string;
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    pincode: string;
-    phone_number: string;
-    email: string;
-    website: string;
-    opening_hours: string;
-    ratings: number;
-    reviews_count: number;
-    services: string;
-    latitude: number;
-    longitude: number;
-    image_url: string;
-    created_by: number;
-    createdAt: string;
-    updatedAt: string;
-  }
-  
+  id: string;
+  business_name: string;
+  owner: string;
+  phone: string;
+  email: string;
+  website: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  services: string;
+  image: string[];
+  type: string; // Ensure the 'type' field is here
+  created_at: string;
+  created_by: string;
+  updated_by: string;
+}
