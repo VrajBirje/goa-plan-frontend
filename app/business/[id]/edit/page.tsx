@@ -35,7 +35,7 @@ const EditBusinessPage = () => {
     const fetchBusinessData = async () => {
       if (!businessId) return;
       try {
-        const response = await fetch(`http://localhost:5000/api/business/${businessId}`); // Adjusted to call your custom API
+        const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`); // Adjusted to call your custom API
         if (!response.ok) {
           throw new Error("Failed to fetch business details for edit");
         }
@@ -62,7 +62,7 @@ const EditBusinessPage = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true); // Show spinner while submitting
-      const response = await fetch(`http://localhost:5000/api/business/${businessId}`, {
+      const response = await fetch(`https://goa-plan-backend.onrender.com/api/business/${businessId}`, {
         method: "PUT", // PUT request for updating
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -113,7 +113,7 @@ const EditBusinessPage = () => {
               <label className="block mb-2 font-medium">Business Category</label>
               <select
                 name="type"
-                value={formData.type} // Set the value of select based on the formData
+                value={formData.type || ""} // Set the value of select based on the formData
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required

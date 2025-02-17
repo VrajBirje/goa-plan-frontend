@@ -79,7 +79,7 @@ const Page = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/business/", {
+      const response = await fetch("https://goa-plan-backend.onrender.com/api/business/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
@@ -132,7 +132,7 @@ const Page = () => {
                 className="w-full p-2 border rounded"
                 required
               >
-                <option value="1" disabled>Select a business type</option>
+                <option value="" disabled>Select a business type</option>
                 <option value="villa-stay">Villa Stay</option>
                 <option value="home-stay">Home Stay</option>
                 <option value="service-apartments">Service Apartments</option>
